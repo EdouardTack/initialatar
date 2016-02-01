@@ -1,0 +1,21 @@
+{
+  "name": "EdouardTack/initialatar",
+  "description": "Avatar with initials",
+  "license": "MIT",
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "authors": [
+    {
+      "name": "Edouard Tack",
+      "email": "edouard@tackacoder.fr"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Initialatar\\": "src/"
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
