@@ -4,12 +4,6 @@ use Initialatar\Initialatar;
 
 include './vendor/autoload.php';
 
-class File {
- public function metho($image, $ressource) {
-    die('test');
- }
-}
-
 $name = "Edouard Tack";
 
 $o = new Initialatar(array(
@@ -18,7 +12,7 @@ $o = new Initialatar(array(
     'height'    => 50,
     'ellipse'   => true
 ));
-$o->create()->save(array(new File(), 'metho'));
+$o->create()->save('test.png');
 
 ?>
 <!DOCTYPE>
