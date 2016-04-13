@@ -51,6 +51,52 @@ $oInitialatar->save('test.png');
 <img src="<?php echo $oInitialatar->display(); ?>">
 ```
 
+## Documentation
+
+### Parameters
+
+```php
+array(
+    'name'      => "My Name", // the string to initialatar
+    'width'     => 50, // Width of the return image
+    'height'    => 50, // Height of the return image
+    'ellipse'   => true // We fill in ellipse or rectangle
+);
+```
+
+### Save method
+
+```php
+Initialatar::save($mixed);
+```
+
+#### String
+
+The name of the output image
+
+#### Array
+
+An array with 2 options, An object and his method
+
+```php
+$oInitialatar->save(array('CLASS', 'METHOD'));
+
+// This option expect 2 parameter
+// $image
+// $ressource of image
+CLASS::method($image, $ressource);
+```
+
+#### Callable
+
+A callable function
+
+```php
+$oInitialatar->save(function($image, $ressource) {
+    // My code here
+});
+```
+
 ## LICENCE
 
 The MIT License (MIT)

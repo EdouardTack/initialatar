@@ -79,6 +79,7 @@ class Initialatar {
     public function save($mixed)
     {
         if (is_string($mixed)) {
+            $mixed .= ".png";
             if (file_put_contents($mixed, $this->_image)) {
                 $this->_filename = $mixed;
             }

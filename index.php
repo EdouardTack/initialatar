@@ -10,9 +10,9 @@ $o = new Initialatar(array(
     'name'      => $name,
     'width'     => 50,
     'height'    => 50,
-    'ellipse'   => true
+    'ellipse'   => false
 ));
-$o->create()->save('test.png');
+$o->create()->save('test');
 
 ?>
 <!DOCTYPE>
