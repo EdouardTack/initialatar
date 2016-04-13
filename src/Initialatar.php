@@ -3,7 +3,7 @@
 namespace Initialatar;
 
 /**
- *
+ * Initialatar
  * @property array $_params
  * @property array $_ressource
  * @property array $image
@@ -13,13 +13,13 @@ class Initialatar {
     /** @var string */
     public $filename;
 
-    /** @var array  */
+    /** @var array */
     private $_params = array();
 
-    /** @var array  */
+    /** @var array */
     private $_ressource;
 
-    /** @var array  */
+    /** @var array */
     private $_image;
 
     /** @var string */
@@ -30,7 +30,8 @@ class Initialatar {
      *
      * @param array $params
      */
-    public function __construct(array $params = array()) {
+    public function __construct(array $params = array())
+    {
         $default = array(
             'width'     => 100,
             'height'    => 100,
@@ -45,7 +46,8 @@ class Initialatar {
      *
      * @return \Initialatar
      */
-    public function create() {
+    public function create(): Initialatar
+    {
         $this->_createImage();
 
         return $this;
@@ -56,7 +58,8 @@ class Initialatar {
      *
      * @return string
      */
-    public function display() {
+    public function display(): string
+    {
         if (!is_null($this->filename))
             return $this->filename;
 
@@ -70,13 +73,14 @@ class Initialatar {
      *   -- string
      *   -- array with Object and method
      *   -- callable
-     * @return bool
+     *
+     * @return void
      */
-    public function save($mixed) {
+    public function save($mixed)
+    {
         if (is_string($mixed)) {
             if (file_put_contents($mixed, $this->_image)) {
                 $this->_filename = $mixed;
-                return true;
             }
         }
         else if (is_array($mixed)) {
@@ -99,10 +103,14 @@ class Initialatar {
      *
      * @return void
      */
-    private function _createImage() {
+    private function _createImage()
+    {
         $hash = md5($this->_params['name']);
         $color = substr($hash, 0, 6);
         $this->_ressource = imagecreatetruecolor($this->_params['width'], $this->_params['height']);
+
+        imageantialias($this->_ressource, true);
+        imagesetthickness($this->_ressource, 25);
 
         $bg = imagecolorallocate($this->_ressource, 0, 0, 0);
         imagecolortransparent($this->_ressource, $bg);
@@ -128,19 +136,21 @@ class Initialatar {
      *
      * @param string $text
      * @param $textcolor
+     *
      * @return array
      */
-    private function _setFont(string $text) {
-        $font = 5;
+    private function _setFont(string $text): array
+    {
+        $font = 8;
 
         $fontWidth = imagefontwidth($font);
         $fontHeight = imagefontheight($font);
 
         $textWidth = $fontWidth * strlen($text);
-        $positionCenter = ceil(($this->_params['width'] - $textWidth) / 2);
+        $positionCenter = (($this->_params['width'] - $textWidth) / 2);
 
         $textHeight = $fontHeight;
-        $positionMiddle = ceil(($this->_params['height'] - $textHeight) / 2);
+        $positionMiddle = (($this->_params['height'] - $textHeight) / 2);
 
         return array($positionCenter, $positionMiddle);
     }
