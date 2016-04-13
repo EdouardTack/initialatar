@@ -116,7 +116,11 @@ class Initialatar {
         imagecolortransparent($this->_ressource, $bg);
 
         $color = imagecolorallocate($this->_ressource, hexdec(substr($color,0,2)), hexdec(substr($color,2,2)), hexdec(substr($color,4,2)));
-        imagefilledellipse($this->_ressource, ($this->_params['width'] / 2), ($this->_params['height'] / 2), $this->_params['width'] - 1, $this->_params['height'] - 1, $color);
+
+        if ($this->_params['ellipse'])
+            imagefilledellipse($this->_ressource, ($this->_params['width'] / 2), ($this->_params['height'] / 2), $this->_params['width'] - 1, $this->_params['height'] - 1, $color);
+        else
+            imagefilledrectangle($this->_ressource, 0, 0, $this->_params['width'], $this->_params['height'], $color);
 
         $name = explode(' ', $this->_params['name']);
         $name = (string) substr($name[0], 0, 1) . substr($name[1], 0, 1);
