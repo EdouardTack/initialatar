@@ -4,13 +4,13 @@ use Initialatar\Initialatar;
 
 include './vendor/autoload.php';
 
-$name = "Edouard van ér Tack";
+$name = "sdouard van dr Tack";
 
 $o = new Initialatar(array(
     'name'      => $name,
     'width'     => 200,
     'height'    => 200,
-    'ellipse'   => true,
+    'ellipse'   => false,
     'font'      => true
 ));
 $o->create()->save('true');

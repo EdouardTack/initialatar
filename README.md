@@ -1,10 +1,12 @@
 # PHP avatar with initial's name
 
-This create an avatar with the first letter of the firstname and name, or with the first letter of one string.
+This create an avatar with the first letters of the names, or with the first letter of one string.
 
 ## Requirements
 
 * PHP >= 7
+* GD library
+* FreeType library
 
 ## Load it
 

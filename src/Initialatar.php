@@ -1,9 +1,10 @@
 <?php
 /**
  * Initialatar library
+ *
  * @author Edouard Tack <edouard@tackacoder.fr>
- * Initialatar main version 1.0
- * Licensed under MIT (https://github.com/EdouardTack/initialatar/blob/master/LICENSE)
+ * @version Initialatar main version 1.0
+ * @license Licensed under MIT (https://github.com/EdouardTack/initialatar/blob/master/LICENSE)
  */
 
 namespace Initialatar;
@@ -11,17 +12,17 @@ namespace Initialatar;
 /**
  * Initialatar
  *
+ * @property string $filename
  * @property array $_params
  * @property array $_ressource
- * @property array $image
+ * @property array $_image
+ * @property string $_filename
+ * @property array $_fontOptions
  */
 class Initialatar {
 
     /** @var string */
     public $filename;
-
-    /** @var string */
-    public $font = 'verdana.ttf';
 
     /** @var array */
     private $_params = array();
@@ -34,6 +35,12 @@ class Initialatar {
 
     /** @var string */
     private $_filename;
+
+    /** @var array */
+    private $_fontOptions = array(
+        'font' => 'verdana.ttf',
+        'size' => 21
+    );
 
     /**
      * Constructor
@@ -87,7 +94,7 @@ class Initialatar {
      *
      * @return void
      */
-    public function save($mixed)
+    public function save($mixed): Initialatar
     {
         if (is_string($mixed)) {
             if (strpos($mixed, '.png') === false)
@@ -99,16 +106,34 @@ class Initialatar {
         else if (is_array($mixed)) {
             list($object, $method) = $mixed;
 
-            if (is_a($object, get_class($object))) {
+            // if (is_a($object, get_class($object))) {
                 $this->filename = call_user_func_array($mixed, array($this->_image, $this->_ressource));
-            }
+            /*}
             else if (class_exists($object)) {
                 $this->filename = $object::$method($this->_image, $this->_ressource);
-            }
+            }*/
         }
         else if (is_callable($mixed)) {
             $this->filename = $mixed($this->_image, $this->_ressource);
         }
+
+        return $this;
+    }
+
+    /**
+     * define other options to font
+     *
+     * @param array $options
+     *   -- font the path to ttf font
+     *   -- size int the size of font text
+     *
+     * @return void
+     */
+    public function setFontOptions(array $options): Initialatar
+    {
+        $this->_fontOptions = $this->_fontOptions + $options;
+
+        return $this;
     }
 
     /**
@@ -144,16 +169,16 @@ class Initialatar {
         $bg = imagecolorallocate($this->_ressource, 0, 0, 0);
         imagecolortransparent($this->_ressource, $bg);
 
-        $color = imagecolorallocate($this->_ressource, hexdec(substr($color,0,2)), hexdec(substr($color,2,2)), hexdec(substr($color,4,2)));
+        $bgColor = imagecolorallocate($this->_ressource, hexdec(substr($color, 0, 2)), hexdec(substr($color, 2, 2)), hexdec(substr($color, 4, 2)));
 
         if ($this->_params['ellipse'])
-            imagefilledellipse($this->_ressource, ($this->_params['width'] / 2), ($this->_params['height'] / 2), $this->_params['width'] - 1, $this->_params['height'] - 1, $color);
+            imagefilledellipse($this->_ressource, ($this->_params['width'] / 2), ($this->_params['height'] / 2), $this->_params['width'] - 1, $this->_params['height'] - 1, $bgColor);
         else
-            imagefilledrectangle($this->_ressource, 0, 0, $this->_params['width'], $this->_params['height'], $color);
+            imagefilledrectangle($this->_ressource, 0, 0, $this->_params['width'], $this->_params['height'], $bgColor);
 
-        $name = $this->_setName();
-        $textcolor = imagecolorallocate($this->_ressource, 255, 255, 255);
-        $this->_setFont($name, $textcolor);
+        list($red, $green, $blue) = $this->_getContrast($color);
+        $textcolor = imagecolorallocate($this->_ressource, $red, $green, $blue);
+        $this->_setFont($textcolor);
 
         ob_start();
         $this->_ressource = imagepng($this->_ressource);
@@ -163,20 +188,26 @@ class Initialatar {
     }
 
     /**
+     * Apply the text on the image ressource
      *
+     * @param $color int The color code send by imagecolorallocate()
      *
      * @return void
      */
-    private function _setFont(string $name, string $color)
+    private function _setFont(int $color)
     {
-        if ($this->_params['font']) {
-            if ($this->font === 'verdana.ttf') {
-                $this->font = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'font' . DIRECTORY_SEPARATOR . $this->font;
-            }
+        $name = $this->_setName();
 
-            $x = (($this->_params['width'] - (15 * 4)) / 2);
-            $y = (($this->_params['height'] + (5 * 4)) / 2);
-            imagettftext($this->_ressource, 20, 0, $x, $y, $color, $this->font, $name);
+        if ($this->_params['font']) {
+            if ($this->_fontOptions['font'] === 'verdana.ttf') {
+                $this->_fontOptions['font'] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'font' . DIRECTORY_SEPARATOR . $this->_fontOptions['font'];
+            }
+            // Get the coords for font positioning
+            $bbox = imagettfbbox($this->_fontOptions['size'], 0, $this->_fontOptions['font'], $name);
+            $x = $bbox[0] + (imagesx($this->_ressource) / 2) - ($bbox[4] / 2);
+            $y = $bbox[1] + (imagesy($this->_ressource) / 2) - ($bbox[5] / 2);
+            // Add the font text
+            imagettftext($this->_ressource, $this->_fontOptions['size'], 0, $x, $y, $color, $this->_fontOptions['font'], $name);
         }
         else {
             list($x, $y) = $this->_getTextPosition($name, $color);
@@ -188,7 +219,6 @@ class Initialatar {
      * Setting the text in image
      *
      * @param string $text
-     * @param $textcolor
      *
      * @return array
      */
@@ -206,6 +236,25 @@ class Initialatar {
         $positionMiddle = (($this->_params['height'] - $textHeight) / 2);
 
         return array($positionCenter, $positionMiddle);
+    }
+
+    /**
+     * Get rgb color by contrast of the background color
+     *
+     * @param string $hexcolor hexadecimal background color
+     *
+     * @return array the rgb id
+     */
+    private function _getContrast(string $color): array
+    {
+        $hexcolor = substr($color, 0, 6);
+        $r = hexdec(substr($hexcolor, 0, 2));
+        $g = hexdec(substr($hexcolor, 2, 2));
+        $b = hexdec(substr($hexcolor, 4, 2));
+
+        $yiq = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+
+        return ($yiq >= 128) ? array(1, 1, 1) : array(255, 255, 255);
     }
 
 }
