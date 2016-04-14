@@ -1,9 +1,16 @@
 <?php
+/**
+ * Initialatar library
+ * @author Edouard Tack <edouard@tackacoder.fr>
+ * Initialatar main version 1.0
+ * Licensed under MIT (https://github.com/EdouardTack/initialatar/blob/master/LICENSE)
+ */
 
 namespace Initialatar;
 
 /**
  * Initialatar
+ *
  * @property array $_params
  * @property array $_ressource
  * @property array $image
@@ -12,6 +19,9 @@ class Initialatar {
 
     /** @var string */
     public $filename;
+
+    /** @var string */
+    public $font = 'verdana.ttf';
 
     /** @var array */
     private $_params = array();
@@ -35,7 +45,8 @@ class Initialatar {
         $default = array(
             'width'     => 100,
             'height'    => 100,
-            'ellipse'   => true
+            'ellipse'   => true,
+            'font'      => false
         );
 
         $this->_params = $params + $default;
@@ -79,7 +90,8 @@ class Initialatar {
     public function save($mixed)
     {
         if (is_string($mixed)) {
-            $mixed .= ".png";
+            if (strpos($mixed, '.png') === false)
+                $mixed .= ".png";
             if (file_put_contents($mixed, $this->_image)) {
                 $this->_filename = $mixed;
             }
@@ -97,6 +109,22 @@ class Initialatar {
         else if (is_callable($mixed)) {
             $this->filename = $mixed($this->_image, $this->_ressource);
         }
+    }
+
+    /**
+     * Create the initials with the name parameter
+     *
+     * @return string
+     */
+    private function _setName(): string
+    {
+        $return = array();
+        $names = explode(' ', $this->_params['name']);
+        foreach ($names as $name) {
+            $return[] = (string) mb_substr(mb_strtoupper($name), 0, 1);
+        }
+
+        return implode('', $return);
     }
 
     /**
@@ -123,17 +151,37 @@ class Initialatar {
         else
             imagefilledrectangle($this->_ressource, 0, 0, $this->_params['width'], $this->_params['height'], $color);
 
-        $name = explode(' ', $this->_params['name']);
-        $name = (string) substr($name[0], 0, 1) . substr($name[1], 0, 1);
+        $name = $this->_setName();
         $textcolor = imagecolorallocate($this->_ressource, 255, 255, 255);
-        list($x, $y) = $this->_setFont($name, $textcolor);
-        imagestring($this->_ressource, 5, $x, $y, $name, $textcolor);
+        $this->_setFont($name, $textcolor);
 
         ob_start();
         $this->_ressource = imagepng($this->_ressource);
         $image_data = ob_get_contents();
         ob_end_clean();
         $this->_image = $image_data;
+    }
+
+    /**
+     *
+     *
+     * @return void
+     */
+    private function _setFont(string $name, string $color)
+    {
+        if ($this->_params['font']) {
+            if ($this->font === 'verdana.ttf') {
+                $this->font = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'font' . DIRECTORY_SEPARATOR . $this->font;
+            }
+
+            $x = (($this->_params['width'] - (15 * 4)) / 2);
+            $y = (($this->_params['height'] + (5 * 4)) / 2);
+            imagettftext($this->_ressource, 20, 0, $x, $y, $color, $this->font, $name);
+        }
+        else {
+            list($x, $y) = $this->_getTextPosition($name, $color);
+            imagestring($this->_ressource, 5, $x, $y, $name, $color);
+        }
     }
 
     /**
@@ -144,9 +192,9 @@ class Initialatar {
      *
      * @return array
      */
-    private function _setFont(string $text): array
+    private function _getTextPosition(string $text): array
     {
-        $font = 8;
+        $font = 12;
 
         $fontWidth = imagefontwidth($font);
         $fontHeight = imagefontheight($font);
