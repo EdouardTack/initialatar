@@ -110,27 +110,59 @@ class Initialatar {
     public function save($mixed): Initialatar
     {
         if (is_string($mixed)) {
+            $this->output();
+
             if (strpos($mixed, '.png') === false)
                 $mixed .= ".png";
-            if (file_put_contents($mixed, $this->_image)) {
-                $this->_filename = $mixed;
-            }
+
+            $this->put($mixed, $this->_image);
         }
         else if (is_array($mixed)) {
             list($object, $method) = $mixed;
 
-            // if (is_a($object, get_class($object))) {
-                $this->filename = call_user_func_array($mixed, [$this->_image, $this->_ressource]);
-            /*}
-            else if (class_exists($object)) {
-                $this->filename = $object::$method($this->_image, $this->_ressource);
-            }*/
+            $this->filename = call_user_func_array($mixed, [$this, $this->_ressource]);
         }
         else if (is_callable($mixed)) {
-            $this->filename = $mixed($this->_image, $this->_ressource);
+            $this->filename = $mixed($this, $this->_ressource);
         }
 
         return $this;
+    }
+
+    /**
+     * Put the image file_put_contents
+     *
+     * @param string $path
+     * @param string $image
+     *
+     * @return bool
+     */
+    public function put(string $path, string $image): bool
+    {
+        if (file_put_contents($path, $image)) {
+            $this->_filename = $this->filename = $path;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Put the imagepng to the ressource
+     * And get the ressource data
+     *
+     * @return void
+     */
+    public function output(): string
+    {
+        ob_start();
+        imagepng($this->_ressource);
+        $image_data = ob_get_contents();
+        ob_end_clean();
+        $this->_image = $image_data;
+
+        return $image_data;
     }
 
     /**
@@ -192,12 +224,6 @@ class Initialatar {
         list($red, $green, $blue) = $this->_getContrast($color);
         $textcolor = imagecolorallocate($this->_ressource, $red, $green, $blue);
         $this->_setFont($textcolor);
-
-        ob_start();
-        $this->_ressource = imagepng($this->_ressource);
-        $image_data = ob_get_contents();
-        ob_end_clean();
-        $this->_image = $image_data;
     }
 
     /**

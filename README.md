@@ -33,12 +33,12 @@ And run `php composer.phar update`
 ```php
 use Initialatar\Initialatar;
 
-$oInitialatar = new Initialatar(array(
+$oInitialatar = new Initialatar([
     'name'      => "Edouard Tack",
     'width'     => 50,
     'height'    => 50,
     'ellipse'   => true
-));
+]);
 
 // Create the image ressource
 $oInitialatar->create();
@@ -58,12 +58,12 @@ $oInitialatar->save('test.png');
 ### Parameters
 
 ```php
-array(
+[
     'name'      => "My Name", // the string to initialatar
     'width'     => 50, // Width of the return image
     'height'    => 50, // Height of the return image
     'ellipse'   => true // We fill in ellipse or rectangle
-);
+];
 ```
 
 ### Save method
@@ -86,7 +86,7 @@ $oInitialatar->save(array('CLASS', 'METHOD'));
 // This option expect 2 parameter
 // $image
 // $ressource of image
-CLASS::method($image, $ressource);
+CLASS::method(Initialatar $initialatar, $ressource);
 ```
 
 #### Callable
@@ -94,16 +94,45 @@ CLASS::method($image, $ressource);
 A callable function
 
 ```php
-$oInitialatar->save(function($image, $ressource) {
+$oInitialatar->save(function(Initialatar $initialatar, $ressource) {
     // My code here
 });
+```
+
+#### Output method
+
+With Array or Callable option, you have to ```$initialatar->put('PATH/TO/FILE/FILENAME.PNG', $initialatar->output());``` to finish execution
+
+```php
+use Initialatar\Initialatar;
+
+// Class example
+class File {
+    public function save(Initialatar $initialatar, $ressource) {
+		// We can play with the ressource before save file
+        imageflip($ressource, IMG_FLIP_VERTICAL);
+		// Save
+        $initialatar->put('PATH/TO/MEDIA/FILENAME.png', $initialatar->output());
+    }
+}
+$file = new File();
+
+$o = new Initialatar([
+    'name'      => $name,
+    'width'     => 150,
+    'height'    => 250,
+    'ellipse'   => true,
+    'font'      => true
+]);
+// Save with File::save method
+$o->create()->save([$file, 'save']);
 ```
 
 ## LICENCE
 
 The MIT License (MIT)
 
-Copyright (c) 2016 Edouard
+Copyright (c) 2016 Edouard Tack
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
