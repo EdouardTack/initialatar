@@ -269,10 +269,10 @@ class Initialatar {
         $fontHeight = imagefontheight($font);
 
         $textWidth = $fontWidth * strlen($text);
-        $positionCenter = (($this->_params['width'] - $textWidth) / 2);
+        $positionCenter = ceil(($this->_params['width'] - $textWidth) / 2);
 
         $textHeight = $fontHeight;
-        $positionMiddle = (($this->_params['height'] - $textHeight) / 2);
+        $positionMiddle = ceil(($this->_params['height'] - $textHeight) / 2);
 
         return [$positionCenter, $positionMiddle];
     }
