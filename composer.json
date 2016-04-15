@@ -1,6 +1,8 @@
 {
   "name": "edouardtack/initialatar",
   "description": "Avatar with initials",
+  "type": "library",
+  "homepage": "https://github.com/EdouardTack/initialatar",
   "license": "MIT",
   "require": {
     "php": ">=7.0.0"
@@ -8,9 +10,16 @@
   "authors": [
     {
       "name": "Edouard Tack",
-      "email": "edouard@tackacoder.fr"
+      "email": "edouard@tackacoder.fr",
+      "role": "Developer"
     }
   ],
+  "support": {
+    "email": "edouard@tackacoder.fr",
+    "issues": "https://github.com/EdouardTack/initialatar/issues",
+    "source": "https://github.com/EdouardTack/initialatar/tree/master",
+    "docs": "https://github.com/EdouardTack/initialatar/blob/master/README.md"
+  },
   "autoload": {
     "psr-4": {
       "Initialatar\\": "src/"
