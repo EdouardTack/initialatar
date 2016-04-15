@@ -25,36 +25,36 @@ class Initialatar {
     public $filename;
 
     /** @var array */
-    private $_params = array();
+    private $_params = [];
 
     /** @var array */
     private $_ressource;
 
-    /** @var array */
+    /** @var string */
     private $_image;
 
     /** @var string */
     private $_filename;
 
     /** @var array */
-    private $_fontOptions = array(
+    private $_fontOptions = [
         'font' => 'verdana.ttf',
         'size' => 21
-    );
+    ];
 
     /**
      * Constructor
      *
      * @param array $params
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
-        $default = array(
+        $default = [
             'width'     => 100,
             'height'    => 100,
             'ellipse'   => true,
             'font'      => false
-        );
+        ];
 
         $this->_params = $params + $default;
     }
@@ -107,7 +107,7 @@ class Initialatar {
             list($object, $method) = $mixed;
 
             // if (is_a($object, get_class($object))) {
-                $this->filename = call_user_func_array($mixed, array($this->_image, $this->_ressource));
+                $this->filename = call_user_func_array($mixed, [$this->_image, $this->_ressource]);
             /*}
             else if (class_exists($object)) {
                 $this->filename = $object::$method($this->_image, $this->_ressource);
@@ -143,7 +143,7 @@ class Initialatar {
      */
     private function _setName(): string
     {
-        $return = array();
+        $return = [];
         $names = explode(' ', $this->_params['name']);
         foreach ($names as $name) {
             $return[] = (string) mb_substr(mb_strtoupper($name), 0, 1);
@@ -235,7 +235,7 @@ class Initialatar {
         $textHeight = $fontHeight;
         $positionMiddle = (($this->_params['height'] - $textHeight) / 2);
 
-        return array($positionCenter, $positionMiddle);
+        return [$positionCenter, $positionMiddle];
     }
 
     /**
@@ -254,7 +254,7 @@ class Initialatar {
 
         $yiq = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
 
-        return ($yiq >= 128) ? array(1, 1, 1) : array(255, 255, 255);
+        return ($yiq >= 128) ? [1, 1, 1] : [255, 255, 255];
     }
 
 }
