@@ -85,7 +85,9 @@ class Initialatar {
     }
 
     /**
+     * Retrun the name of file
      *
+     * @return string
      */
     public function getName(): string
     {
