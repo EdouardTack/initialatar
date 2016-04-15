@@ -6,15 +6,14 @@ include './vendor/autoload.php';
 
 $name = "sdouard van dr Tack";
 
-$o = new Initialatar(array(
+$o = new Initialatar([
     'name'      => $name,
-    'width'     => 200,
-    'height'    => 200,
-    'ellipse'   => false,
+    'width'     => 150,
+    'height'    => 250,
+    'ellipse'   => true,
     'font'      => true
-));
+]);
 $o->create()->save('true');
-
 ?>
 <!DOCTYPE>
 <html>
@@ -22,6 +21,6 @@ $o->create()->save('true');
 
 </head>
 <body class="initial">
-    <img src="<?php echo $o->display(); ?>" alt="">
+    <img src="<?= $o->display(); ?>" alt="<?= $o->getName(); ?>">
 </body>
 </html>

@@ -85,6 +85,17 @@ class Initialatar {
     }
 
     /**
+     *
+     */
+    public function getName(): string
+    {
+        if (!is_null($this->filename))
+            return basename($this->filename);
+
+        return basename($this->_filename);
+    }
+
+    /**
      * Saving the initialar image
      *
      * @param mixed
