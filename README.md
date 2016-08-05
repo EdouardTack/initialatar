@@ -37,7 +37,8 @@ $oInitialatar = new Initialatar([
     'name'      => "Edouard Tack",
     'width'     => 50,
     'height'    => 50,
-    'ellipse'   => true
+    'ellipse'   => true,
+    'font'      => true
 ]);
 
 // Create the image ressource
@@ -126,6 +127,17 @@ $o = new Initialatar([
 ]);
 // Save with File::save method
 $o->create()->save([$file, 'save']);
+```
+
+#### Font options
+
+Default, we use 'verdana.ttf' and 21 font size. You can change this options like this.
+
+```php
+$o->setFontOptions([
+    'font' => FULL_PATH_TO_YOUR_TTF_FONT,
+    'size' => 60
+]);
 ```
 
 ## LICENCE

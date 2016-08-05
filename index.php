@@ -4,7 +4,7 @@ use Initialatar\Initialatar;
 
 include './vendor/autoload.php';
 
-$name = "sdouard van dr Tack";
+$name = "sdouardandrTack";
 
 class File {
     public function save(Initialatar $initialatar, $ressource) {
@@ -16,12 +16,13 @@ $file = new File();
 
 $o = new Initialatar([
     'name'      => $name,
-    'width'     => 150,
-    'height'    => 250,
+    'width'     => 600,
+    'height'    => 600,
     'ellipse'   => true,
     'font'      => true
 ]);
-$o->create()->save([$file, 'save']);
+// $o->setFontOptions(['size' => 60]);
+$o->create()->save('test.png');
 ?>
 <!DOCTYPE>
 <html>

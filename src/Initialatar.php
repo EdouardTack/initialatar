@@ -176,7 +176,7 @@ class Initialatar {
      */
     public function setFontOptions(array $options): Initialatar
     {
-        $this->_fontOptions = $this->_fontOptions + $options;
+        $this->_fontOptions =  $options + $this->_fontOptions;
 
         return $this;
     }
@@ -291,9 +291,9 @@ class Initialatar {
         $g = hexdec(substr($hexcolor, 2, 2));
         $b = hexdec(substr($hexcolor, 4, 2));
 
-        $yiq = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+        $contrast = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
 
-        return ($yiq >= 128) ? [1, 1, 1] : [255, 255, 255];
+        return ($contrast >= 128) ? [1, 1, 1] : [255, 255, 255];
     }
 
 }
