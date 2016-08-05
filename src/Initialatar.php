@@ -189,9 +189,20 @@ class Initialatar {
     private function _setName(): string
     {
         $return = [];
-        $names = explode(' ', $this->_params['name']);
-        foreach ($names as $name) {
-            $return[] = (string) mb_substr(mb_strtoupper($name), 0, 1);
+        $name = $this->_params['name'];
+        $names = explode(' ', $name);
+        if (count($names) > 1) {
+            foreach ($names as $name) {
+                $return[] = (string) mb_substr(mb_strtoupper($name), 0, 1);
+            }
+        }
+        else {
+            $nameLength = strlen($name);
+            if ($nameLength > 7) {
+                $middle = floor(($nameLength / 2));
+
+                return substr($name, 0, 1) . '' . substr($name, $middle, 1);
+            }
         }
 
         return implode('', $return);

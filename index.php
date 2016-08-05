@@ -16,12 +16,12 @@ $file = new File();
 
 $o = new Initialatar([
     'name'      => $name,
-    'width'     => 600,
-    'height'    => 600,
+    'width'     => 50,
+    'height'    => 50,
     'ellipse'   => true,
     'font'      => true
 ]);
-// $o->setFontOptions(['size' => 60]);
+$o->setFontOptions(['size' => 12]);
 $o->create()->save('test.png');
 ?>
 <!DOCTYPE>
